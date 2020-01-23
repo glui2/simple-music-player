@@ -5,6 +5,7 @@
       :songs="songs"
       :currentSong="currentSong"
       @handlePlay="handlePlay"
+      @handleDelete="handleDelete"
     />
   </div>
 </template>
@@ -14,6 +15,7 @@
 import CurrentSong from "@/components/CurrentSong";
 import songs from "./assets/songs.json";
 import SongList from "./components/SongList";
+import _ from "lodash";
 
 export default {
   name: "app",
@@ -52,6 +54,10 @@ export default {
         this.currentSong = null;
         this.audioElement = null;
       });
+    },
+    handleDelete: function(payload) { 
+      const updatedArray = _.without(this.songs, payload); // create an array with this.songs, returns same array WITHOUT the payload
+      this.songs = updatedArray; 
     }
   }
 };
