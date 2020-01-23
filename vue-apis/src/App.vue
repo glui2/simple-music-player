@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       currentSong: null,
+      audioElement: null,
       songs: songs
     };
   },
@@ -30,7 +31,27 @@ export default {
   },
   methods: {
     handlePlay: function(payload) {
+      if (this.audioElement == null) {
+        this.audioElement = new Audio(payload.music_url);
+        this.audioElement.play();
+      } else {
+        if (payload == this.currentSong) {
+          if (this.audioElement.paused) {
+            this.audioElement.play();
+          } else {
+            this.audioElement.pause();
+          }
+        } else {
+          this.audioElement.src = payload.music_url;
+          this.audioElement.play();
+        }
+      }
       this.currentSong = payload;
+      this.audioElement.addEventListener("ended", () => {
+        // if the event is ended then run that function
+        this.currentSong = null;
+        this.audioElement = null;
+      });
     }
   }
 };
