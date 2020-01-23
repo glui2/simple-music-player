@@ -14,22 +14,24 @@
 // import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import CurrentSong from "@/components/CurrentSong";
 import SongList from "./components/SongList";
-import axios from "axios";
+// import axios from "axios";
 import _ from "lodash";
+import { mapState } from "vuex";
 
 export default {
   name: "app",
   data() {
     return {
-      currentSong: null,
       audioElement: null,
-      songs: null
     };
   },
   components: {
     // FontAwesomeIcon,
     CurrentSong,
     SongList
+  },
+  computed: {
+    ...mapState(['songs', 'currentSong']) // creates these variables 
   },
   methods: {
     handlePlay: function(payload) {
@@ -61,15 +63,7 @@ export default {
     }
   },
   created() {
-    axios({
-      method: "get",
-      url: "https://orangevalleycaa.org/api/music",
-      params: {
-        order: "name"
-      }
-    }).then(response => {
-      this.songs = response.data;
-    });
+    this.$store.dispatch("fetchSongs");
   }
 };
 </script>
