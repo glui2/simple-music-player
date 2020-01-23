@@ -14,24 +14,21 @@
 // import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import CurrentSong from "@/components/CurrentSong";
 import SongList from "./components/SongList";
-// import axios from "axios";
-import _ from "lodash";
 import { mapState } from "vuex";
 
 export default {
   name: "app",
   data() {
     return {
-      audioElement: null,
+      audioElement: null
     };
   },
   components: {
-    // FontAwesomeIcon,
     CurrentSong,
     SongList
   },
   computed: {
-    ...mapState(['songs', 'currentSong']) // creates these variables 
+    ...mapState(["songs", "currentSong"]) // creates these variables
   },
   methods: {
     handlePlay: function(payload) {
@@ -50,16 +47,15 @@ export default {
           this.audioElement.play();
         }
       }
-      this.currentSong = payload;
+      this.$store.dispatch("changeSong", payload);
       this.audioElement.addEventListener("ended", () => {
         // if the event is ended then run that function
-        this.currentSong = null;
+        this.$store.dispatch("changeSong", null);
         this.audioElement = null;
       });
     },
     handleDelete: function(payload) {
-      const updatedArray = _.without(this.songs, payload); // create an array with this.songs, returns same array WITHOUT the payload
-      this.songs = updatedArray;
+      this.$store.dispatch("deleteSong", payload);
     }
   },
   created() {

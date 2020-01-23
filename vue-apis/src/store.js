@@ -2,6 +2,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import _ from "lodash";
 
 Vue.use(Vuex);
 
@@ -16,11 +17,22 @@ export default new Vuex.Store({
     // for when we want to modify set data in our app
     SET_SONGS(state, payload) {
       state.songs = payload;
+    },
+    CHANGE_CURRENT_SONG(state, payload) {
+      state.currentSong = payload;
     }
   },
   actions: {
     // similar to methods, allows us to run functions that can use the mutations
     // never directly modify state, create actions to use muattions to do so
+
+    changeSong({ commit }, payload) {
+      commit("CHANGE_CURRENT_SONG", payload);
+    },
+    deleteSong({ commit }, payload) {
+      let updatedSongs = _.without(this.state.songs, payload);
+      commit("SET_SONGS", updatedSongs);
+    },
     fetchSongs({ commit }) {
       axios({
         method: "get",
