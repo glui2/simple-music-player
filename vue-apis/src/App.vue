@@ -13,8 +13,8 @@
 <script>
 // import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import CurrentSong from "@/components/CurrentSong";
-import songs from "./assets/songs.json";
 import SongList from "./components/SongList";
+import axios from "axios";
 import _ from "lodash";
 
 export default {
@@ -23,7 +23,7 @@ export default {
     return {
       currentSong: null,
       audioElement: null,
-      songs: songs
+      songs: null
     };
   },
   components: {
@@ -55,10 +55,21 @@ export default {
         this.audioElement = null;
       });
     },
-    handleDelete: function(payload) { 
+    handleDelete: function(payload) {
       const updatedArray = _.without(this.songs, payload); // create an array with this.songs, returns same array WITHOUT the payload
-      this.songs = updatedArray; 
+      this.songs = updatedArray;
     }
+  },
+  created() {
+    axios({
+      method: "get",
+      url: "https://orangevalleycaa.org/api/music",
+      params: {
+        order: "name"
+      }
+    }).then(response => {
+      this.songs = response.data;
+    });
   }
 };
 </script>
